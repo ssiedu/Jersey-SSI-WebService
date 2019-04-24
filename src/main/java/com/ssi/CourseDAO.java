@@ -6,6 +6,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 
 public class CourseDAO {
 	private SessionFactory sf;
@@ -14,6 +16,27 @@ public class CourseDAO {
 		sf=config.buildSessionFactory();
 	}
 	
+	public List<Course> getAllCoursesForPriceRange(int min, int max){
+		Session session=sf.openSession();
+		Criteria cr=session.createCriteria(Course.class);
+		Criterion crt=Restrictions.between("fees", min, max);
+		cr.add(crt);
+		List<Course> courses=cr.list();
+		session.close();
+		return courses;
+	}
+	
+	public List<Course> getAllCoursesForSubject(String subject){
+		Session session=sf.openSession();
+		Criteria cr=session.createCriteria(Course.class);
+		Criterion crt=Restrictions.eq("subject", subject);
+		cr.add(crt);
+		List<Course> courses=cr.list();
+		session.close();
+		return courses;
+	}
+	
+	
 	public List<Course> getAllCourses(){
 		Session session=sf.openSession();
 		Criteria cr=session.createCriteria(Course.class);
@@ -21,7 +44,7 @@ public class CourseDAO {
 		session.close();
 		return courses;
 	}
-	public Course getCourseById(int id){
+	public Course getCourseById(String id){
 		Session session=sf.openSession();
 		Course course=session.get(Course.class, id);
 		session.close();
