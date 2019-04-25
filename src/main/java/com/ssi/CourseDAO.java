@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -14,6 +15,24 @@ public class CourseDAO {
 	public CourseDAO(){
 		Configuration config=new Configuration().configure();
 		sf=config.buildSessionFactory();
+	}
+	
+	public Course removeCourse(String code){
+		Session session=sf.openSession();
+		Transaction tr=session.beginTransaction();
+		Course course=session.get(Course.class, code);
+		session.delete(course);
+		tr.commit();
+		session.close();
+		return course;
+	}
+	public Course addOrModifyCourse(Course course){
+		Session session=sf.openSession();
+		Transaction tr=session.beginTransaction();
+		session.saveOrUpdate(course);
+		tr.commit();
+		session.close();
+		return course;
 	}
 	
 	public List<Course> getAllCoursesForPriceRange(int min, int max){

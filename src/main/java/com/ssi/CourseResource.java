@@ -2,17 +2,51 @@ package com.ssi;
 
 import java.util.List;
 
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 
 @Path("course")
 public class CourseResource {
 
+	
+	@DELETE
+	@Path("{code}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Course removeCourse(@PathParam("code") String code){
+		CourseDAO dao=new CourseDAO();
+		Course course=dao.removeCourse(code);
+		return course;
+	}
+	
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON) //format of data send as response to client
+	@Consumes(MediaType.APPLICATION_JSON) //format of data coming from client
+	public Course updateCourse(Course course){
+		CourseDAO dao=new CourseDAO();
+		dao.addOrModifyCourse(course);
+		return course;
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON) //format of data send as response to client
+	@Consumes(MediaType.APPLICATION_JSON) //format of data coming from client
+	public Course createNewCourse(Course course){
+		CourseDAO dao=new CourseDAO();
+		dao.addOrModifyCourse(course);
+		return course;
+	}
+	
+	
+	
 	@Path("price")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
